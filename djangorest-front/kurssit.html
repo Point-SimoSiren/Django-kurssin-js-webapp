@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+
+<head>
+    <title>kurssit webapp</title>
+    <link rel="stylesheet" href="tyyli.css">
+</head>
+
+<body>
+    <div id="ulkokehys">
+
+        <div id="sisältö">
+
+            <h2>Kurssit webapp</h2>
+
+            <button onclick="haku()">Hae kurssit</button>
+
+            <div id="html-taulukko"></div>
+
+            <script>
+                function haku() {
+
+                    document.getElementById("html-taulukko").innerHTML = `<marquee direction = "up"><h2 style="color: aqua;">Haetaan kursseja...</h2></marquee>`
+
+
+                    var kurssiTable = `<table style="width: 500px">
+        <thead>
+            <tr>
+                <th>Nimi</th>
+                <th>Laajuus</th>
+                
+            </tr>
+        </thead>
+        <tbody>`
+
+                    fetch('http://127.0.0.1:8000/kurssit/')
+                        .then(response => response.json())
+                        .then(json => json.map(k => {
+                            console.log(k.nimi)
+                            kurssiTable += `<tr>
+            <td>${k.nimi}</td>
+            <td>${k.laajuus}</td>
+        </tr>`
+                        }
+                        ))
+
+                    // Palvelimen vastaus kestää ja siksi koodi ei toimi
+                    // jos ei odota dataa hetken ennenkuin päättää taulukon. Nyt 4000ms = 4sek.
+
+                    setTimeout(() => {
+                        kurssiTable += `</tbody></table>`
+                        document.getElementById("html-taulukko").innerHTML = kurssiTable
+                    }, 4000
+                    )
+
+                }
+
+            </script>
+        </div>
+    </div>
+</body>
+
+</html>
